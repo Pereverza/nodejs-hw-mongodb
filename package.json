@@ -1,25 +1,37 @@
 {
-  "name": "goit-node-js",
+  "name": "hw2-mongodb",
   "version": "1.0.0",
   "description": "goit-node-js",
   "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node src/index",
-    "get-all": "node src/scripts/getAllContacts",
-    "generate": "node src/scripts/generateContacts.js",
-    "add-one": "node src/scripts/addOneContact.js",
-    "count": "node src/scripts/countContacts.js",
-    "remove-last": "node src/scripts/removeLastContact.js",
-    "remove-all": "node src/scripts/removeAllContacts.js"
+    "dev": "nodemon src/index"
   },
   "keywords": [],
-  "author": "",
+  "author": "Tetiana Pereverza <tanyusha.vzletka82@gmail.com>",
   "license": "ISC",
   "devDependencies": {
-    "@eslint/js": "^9.2.0",
-    "@faker-js/faker": "^9.8.0",
-    "eslint": "^9.2.0",
-    "globals": "^15.1.0"
+    "@eslint/js": "^9.28.0",
+    "eslint": "^9.28.0",
+    "globals": "^15.15.0",
+    "nodemon": "^3.1.10",
+    "pino-pretty": "^13.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pereverza/nodejs-hw-mongodb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Pereverza/nodejs-hw-mongodb/issues"
+  },
+  "homepage": "https://github.com/Pereverza/nodejs-hw-mongodb#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "install": "^0.13.0",
+    "mongoose": "^8.15.1",
+    "pino-http": "^10.5.0"
   }
 }
