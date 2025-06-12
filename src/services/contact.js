@@ -2,4 +2,4 @@ import ContactCollection from "../db/models/Contact.js";
 
 export const getContact = () => ContactCollection.find();
 
-export const getContactId = id => ContactCollection.findById(id);
+export const getContactById = id => ContactCollection.findById(id);

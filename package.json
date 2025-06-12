@@ -1,5 +1,5 @@
 {
-  "name": "hw2-mongodb",
+  "name": "hw3-crud",
   "version": "1.0.0",
   "description": "goit-node-js",
   "type": "module",
@@ -30,7 +30,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "http-errors": "^2.0.0",
     "install": "^0.13.0",
+    "mongodb": "^6.17.0",
     "mongoose": "^8.15.1",
     "pino-http": "^10.5.0"
   }

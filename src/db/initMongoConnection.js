@@ -8,10 +8,16 @@ export const initMongodbConnection = async () => {
     const password = getEnvVar('MONGODB_PASSWORD');
     const url = getEnvVar('MONGODB_URL');
     const db = getEnvVar('MONGODB_DB');
-    
+    console.log('Trying to connect with', {
+      user,
+      password: 'hidden',
+      url,
+      db,
+    });
     await mongoose.connect(`mongodb+srv://${user}:${password}@${url}/${db}?retryWrites=true&w=majority&appName=Cluster0`);
     console.log('Successfully connected to MongoDB');
   } catch (error) {
     console.log(error.messages);
   };
 };
+
