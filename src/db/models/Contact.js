@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model} from 'mongoose';
 
 const contactSchema = new Schema(
   {
@@ -14,6 +14,7 @@ const contactSchema = new Schema(
     },
   },
   { timestamps: true },
-);
+
+{versionKay: false,  timestamps: true});
 const ContactCollection = model("contact", contactSchema);
 export default ContactCollection;
