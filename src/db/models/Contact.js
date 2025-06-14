@@ -13,8 +13,12 @@ const contactSchema = new Schema(
       required: true,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    versionKey: false,
+  },
 
-{versionKay: false,  timestamps: true});
+  { versionKay: false, timestamps: true },
+);
 const ContactCollection = model("contact", contactSchema);
 export default ContactCollection;
