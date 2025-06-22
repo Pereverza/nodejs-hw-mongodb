@@ -5,6 +5,7 @@ import {
   updateContactsById,
   deleteContactById,
 } from '../services/contact.js';
+
 import createHttpError from 'http-errors';
 
 export const getContactController = async (req, res) => {
@@ -63,7 +64,7 @@ export const patchContactByIdController = async (req, res, next) => {
   res.json({
     status: 200,
     message: 'Successfully patched a contact!',
-    data: result.data,
+    data: result.data ?? result,
   });
 };
 export const deleteContactByIdController = async (req, res, next) => {
