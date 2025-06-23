@@ -10,11 +10,21 @@ import createHttpError from 'http-errors';
 import { parsePaginationParams } from '../utils/parsePaginstionParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { contactSortFields } from '../db/models/Contact.js';
+import { parseContactFilters } from '../utils/filters/parseContactFilters.js';
 
 export const getContactController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query, contactSortFields);
-  const result = await getContact({ page, perPage, sortBy, sortOrder });
+  const filters = parseContactFilters(req.query);
+
+  const result = await getContact({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filters,
+
+  });
 
   res.json({
     status: 200,
@@ -65,7 +75,7 @@ export const patchContactByIdController = async (req, res, next) => {
   if (!result) {
     next(createHttpError(404, 'Contact not found'));
     return;
-  };
+  }
 
   res.json({
     status: 200,
@@ -79,7 +89,7 @@ export const deleteContactByIdController = async (req, res, next) => {
   if (!data) {
     next(createHttpError(404, 'Contact not found'));
     return;
-  };
+  }
 
   res.status(204).send();
 };
