@@ -5,6 +5,7 @@ import { getEnvVar } from "./utils/getEnvVar.js";;
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import contactRouter from "./router/contacts.js";
+import  authRouter  from "./router/auth-router.js";
 
 export const setupServer = () => {
   const app = express();
@@ -13,6 +14,7 @@ export const setupServer = () => {
   app.use(express.json());
   // app.use(logger);
 
+app.use('/auth', authRouter);
   app.use("/contact", contactRouter);
 
   app.use(errorHandler);

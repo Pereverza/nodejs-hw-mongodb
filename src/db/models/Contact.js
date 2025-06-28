@@ -5,19 +5,19 @@ const contactSchema = new Schema(
   {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     phoneNumber: {
       type: String,
-      required: true
+      required: true,
     },
     email: {
       type: String,
-      default: null
+      default: null,
     },
     isFavourite: {
       type: Boolean,
-      default: false
+      default: false,
     },
     contactType: {
       type: String,
