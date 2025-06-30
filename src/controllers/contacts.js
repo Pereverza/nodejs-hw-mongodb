@@ -13,10 +13,11 @@ import { contactSortFields } from '../db/models/Contact.js';
 import { parseContactFilters } from '../utils/filters/parseContactFilters.js';
 
 export const getContactController = async (req, res) => {
+  const { _id: userId } = req.user;
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query, contactSortFields);
   const filters = parseContactFilters(req.query);
-
+  filters.userId = userId;
   const result = await getContact({
     page,
     perPage,
@@ -46,7 +47,8 @@ export const getContactByIdController = async (req, res, next) => {
   });
 };
 export const addContactController = async (req, res) => {
-  const result = await addContact(req.body);
+  const { _id: userId } = req.user;
+  const result = await addContact({ ...req.body, userId });
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',

@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { saveErrorHandler, setUpdateSettings } from './hooks.js';
 
+
 const contactSchema = new Schema(
   {
     name: {
@@ -25,6 +26,11 @@ const contactSchema = new Schema(
       default: 'personal',
       required: true,
     },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: true,
+    }
   },
   {
     timestamps: true,

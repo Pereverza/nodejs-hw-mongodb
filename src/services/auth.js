@@ -8,6 +8,10 @@ import {
   refreshTokenLifetime,
 } from '../constants/authConstant.js';
 
+export const findSession = query => SessionsCollection.findOne(query);
+
+export const findUser = query => UserCollection.findOne(query);
+
 export const registerUser = async payload => {
     const { email, password } = payload;
     const user = await UserCollection.findOne({ email });
@@ -30,7 +34,10 @@ export const loginUser = async ({ email, password }) => {
       userId: user._id,
       accessToken,
       refreshToken,
-      accessTokenValidUntil: new Date(Date.now() + accessTokenLifetime),
-      refreshTokenValidUntil: new Date(Date.now() + refreshTokenLifetime),
+      accessTokenValidUntil: Date.now() + accessTokenLifetime,
+      refreshTokenValidUntil: Date.now() + refreshTokenLifetime,
     });
+};
+export const logoutUser = async (sessionId) => {
+  await SessionsCollection.deleteOne({ _id: sessionId });
 };
