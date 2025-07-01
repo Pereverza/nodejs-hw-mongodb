@@ -17,7 +17,7 @@ export const setupServer = () => {
   app.use(logger);
 
 app.use('/auth', authRouter);
-  app.use("/contact", contactRouter);
+  app.use("/contacts", contactRouter);
 
   app.use(errorHandler);
   app.use(notFoundHandler);
