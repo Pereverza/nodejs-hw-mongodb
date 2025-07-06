@@ -7,6 +7,17 @@ import {
   accessTokenLifetime,
   refreshTokenLifetime,
 } from '../constants/authConstant.js';
+import jwt from "jsonwebtoken";
+import { join } from "node:path";
+import { readFile } from 'node:fs/promises';
+import Handlebars from 'handlebars';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import { sendEmail } from '../utils/sendEmail.js';
+import { TEMPLATES_DIR } from '../constants/index.js';
+
+const jwtSecret = getEnvVar("JWT_SECRET");
+const appDomian = getEnvVar("APP_DOMAIN");
+const verifyTemplatePath = join(TEMPLATES_DIR, "verify-email.html");
 
 const createSession = () => ({
   accessToken: randomBytes(30).toString('base64'),
@@ -29,8 +40,37 @@ export const registerUser = async (payload) => {
     ...payload,
     password: hashPassword,
   });
+  const jwtPayload = {
+    email,
+  };
+
+  const token = jwt.sign(jwtPayload, jwtSecret, { expiresIn: '1h' });
+  const templateSource = await readFile(verifyTemplatePath, "utf-8");
+  const template = Handlebars.compile(templateSource);
+  const html = template({
+    link: `${appDomian}auth/verify?token=${token}`,
+  });
+
+  const verifyEmail = {
+    to: email,
+    subject: "Verify  email",
+    html,
+  }
+  await sendEmail(verifyEmail);
+
   return newUser;
 };
+
+export const verifyUser = token => {
+  try {
+    const { email } = jwt.verify(token, jwtSecret);
+    return UserCollection.findOneAndUpdate({ email }, { verify: true }, { new: true });
+  }
+  catch (error) {
+throw createHttpError(401, error.message);
+  }
+}
+
 export const loginUser = async ({ email, password }) => {
   const user = await UserCollection.findOne({ email });
   if (!user) throw createHttpError(401, 'Email or password is invalid!');
@@ -38,6 +78,7 @@ export const loginUser = async ({ email, password }) => {
   if (!passwordCompare)
     throw createHttpError(401, 'Email or password is invalid!');
 
+  if(!user.verify) throw createHttpError(401, 'Email not verified!');
   const session = createSession();
 
   return SessionsCollection.create({

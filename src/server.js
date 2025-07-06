@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { logger } from "./middlewares/logger.js";
-import { getEnvVar } from "./utils/getEnvVar.js";;
+import { getEnvVar } from "./utils/getEnvVar.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import contactRouter from "./router/contacts.js";

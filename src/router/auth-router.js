@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   registerController,
+  verifyController,
   loginController,
   refreshController,
   logoutController,
@@ -18,6 +19,7 @@ authRouter.post(
   validateBody(registerUserSchema),
   ctrlWrapper(registerController),
 );
+authRouter.get("/verify", ctrlWrapper(verifyController));
 authRouter.post('/login', validateBody(loginUserSchema), loginController);
 
 authRouter.post("/refresh", ctrlWrapper(refreshController));
