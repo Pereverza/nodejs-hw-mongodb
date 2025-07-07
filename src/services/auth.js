@@ -14,6 +14,8 @@ import Handlebars from 'handlebars';
 import { getEnvVar } from '../utils/getEnvVar.js';
 import { sendEmail } from '../utils/sendEmail.js';
 import { TEMPLATES_DIR } from '../constants/index.js';
+import { SMTP } from '../constants/index.js';
+import path from 'node:path';
 
 const jwtSecret = getEnvVar("JWT_SECRET");
 const appDomian = getEnvVar("APP_DOMAIN");
@@ -48,14 +50,15 @@ export const registerUser = async (payload) => {
   const templateSource = await readFile(verifyTemplatePath, "utf-8");
   const template = Handlebars.compile(templateSource);
   const html = template({
-    link: `${appDomian}auth/verify?token=${token}`,
+    link: `${appDomian}/auth/verify?token=${token}`,
   });
 
   const verifyEmail = {
+    from: getEnvVar(SMTP.SMTP_FROM),
     to: email,
-    subject: "Verify  email",
+    subject: 'Verify  email',
     html,
-  }
+  };
   await sendEmail(verifyEmail);
 
   return newUser;
@@ -75,6 +78,7 @@ export const loginUser = async ({ email, password }) => {
   const user = await UserCollection.findOne({ email });
   if (!user) throw createHttpError(401, 'Email or password is invalid!');
   const passwordCompare = await bcrypt.compare(password, user.password);
+
   if (!passwordCompare)
     throw createHttpError(401, 'Email or password is invalid!');
 
@@ -85,6 +89,32 @@ export const loginUser = async ({ email, password }) => {
     userId: user._id,
     ...session,
   });
+};
+export const resetPassword = async (payload) => {
+  let entries;
+
+  try {
+    entries = jwt.verify(payload.token, getEnvVar('JWT_SECRET'));
+  } catch (err) {
+    if (err instanceof Error) throw createHttpError(401, err.message);
+    throw err;
+  }
+
+  const user = await UserCollection.findOne({
+    email: entries.email,
+    _id: entries.sub,
+  });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  const encryptedPassword = await bcrypt.hash(payload.password, 10);
+
+  await UserCollection.updateOne(
+    { _id: user._id },
+    { password: encryptedPassword },
+  );
 };
 export const refreshUser = async ({ refreshToken, sessionId }) => {
   const oldSession = await findSession({ refreshToken, sessionId });
@@ -105,3 +135,48 @@ export const refreshUser = async ({ refreshToken, sessionId }) => {
 export const logoutUser = async (sessionId) => {
   await SessionsCollection.deleteOne({ _id: sessionId });
 };
+export const requestResetToken = async (email) => {
+  const user = await UserCollection.findOne({ email });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    getEnvVar('JWT_SECRET'),
+    {
+      expiresIn: '5m',
+    },
+  );
+
+   const resetTemplatePath = path.join(
+     TEMPLATES_DIR,
+     'reset-password-email.html',
+   );
+   const templateSource = await readFile(resetTemplatePath, 'utf-8');
+   const template = Handlebars.compile(templateSource);
+
+   const html = template({
+     name: user.name,
+     link: `${getEnvVar('APP_DOMAIN')}/reset-password?token=${resetToken}`,
+   });
+
+  try {
+    await sendEmail({
+      from: getEnvVar(SMTP.SMTP_FROM),
+      to: email,
+      subject: 'Reset your password',
+      html,
+    });
+  } catch (error)  {
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
+};
+

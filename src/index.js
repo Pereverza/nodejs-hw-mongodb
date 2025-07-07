@@ -1,19 +1,16 @@
 import "dotenv/config";
 import { setupServer } from './server.js';
 import { initMongodbConnection } from './db/initMongoConnection.js';
+import { createDirNotExists } from "./utils/createDirNotExists.js";
+import { TEMP_DIR, UPLOADS_DIR } from "./constants/index.js";
 
-console.log('ENV Vars:', process.env);
 const bootstrap = async () => {
   await initMongodbConnection();
   setupServer();
+  await createDirNotExists(TEMP_DIR);
+  await createDirNotExists(UPLOADS_DIR);
 };
 
 bootstrap();
 
-export const SMTP = {
-  SMTP_HOST: 'SMTP_HOST',
-  SMTP_PORT: 'SMTP_PORT',
-  SMTP_USER: 'SMTP_USER',
-  SMTP_PASSWORD: 'SMTP_PASSWORD',
-  SMTP_FROM: 'SMTP_FROM',
-};
+
