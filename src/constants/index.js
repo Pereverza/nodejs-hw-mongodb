@@ -15,3 +15,9 @@ export const SMTP = {
 export const TEMP_DIR = resolve("temp");
 
 export const UPLOADS_DIR = resolve("uploads");
+
+export const CLOUDINARY = {
+  CLOUD_NAME: 'CLOUDINARY_CLOUD_NAME',
+  API_KEY: 'CLOUDINARY_API_KEY',
+  API_SECRET: 'CLOUDINARY_API_SECRET',
+};

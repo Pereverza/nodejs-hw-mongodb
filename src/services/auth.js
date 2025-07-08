@@ -157,7 +157,7 @@ export const requestResetToken = async (email) => {
      TEMPLATES_DIR,
      'reset-password-email.html',
    );
-   const templateSource = await readFile(resetTemplatePath, 'utf-8');
+  const templateSource = await readFile(resetTemplatePath, 'utf-8');
    const template = Handlebars.compile(templateSource);
 
    const html = template({

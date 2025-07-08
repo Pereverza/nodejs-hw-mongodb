@@ -5,7 +5,7 @@ import createHttpError from "http-errors";
 const storage = multer.diskStorage({
     destination: TEMP_DIR,
     filename: (req, file, cb) =>{
-        const uniquePreffix = `${Date.now()})_${Math.round(Math.random() * 1E9)}`;
+        const uniquePreffix = `${Date.now()}_${Math.round(Math.random() * 1E9)}`;
         const filename = `${uniquePreffix}_${file.originalname}`;
         cb(null, filename);
     }

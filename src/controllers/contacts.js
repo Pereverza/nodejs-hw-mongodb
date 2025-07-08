@@ -11,6 +11,11 @@ import { parsePaginationParams } from '../utils/parsePaginstionParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { contactSortFields } from '../db/models/Contact.js';
 import { parseContactFilters } from '../utils/filters/parseContactFilters.js';
+import { saveFileToUploadsDir } from '../utils/severFileToUploadsDir.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+
+const enableCloudinary = getEnvVar('ENABLE_CLOUDINARY') === "true";
 
 export const getContactController = async (req, res) => {
   const { _id: userId } = req.user;
@@ -49,12 +54,19 @@ export const getContactByIdController = async (req, res, next) => {
   });
 };
 export const addContactController = async (req, res) => {
-  console.log({
-    file: req.file,
-    body: req.body
- })
   const { _id: userId } = req.user;
-  const contactData = { ...req.body, userId };
+  let photo = null;
+  if (req.file) {
+    if (enableCloudinary) {
+      photo = await saveFileToCloudinary(req.file);
+    }
+    else {
+      photo = await saveFileToUploadsDir(req.file, userId);
+    }
+
+  }
+
+  const contactData = { ...req.body, photo, userId };
   const result = await addContact(contactData);
   res.status(201).json({
     status: 201,
@@ -81,8 +93,19 @@ export const upsertContactByIdController = async (req, res) => {
 export const patchContactByIdController = async (req, res, next) => {
   const { id } = req.params;
   const { _id: userId } = req.user;
-  const result = await updateContacts({_id: id, userId} , req.body);
 
+  let photo;
+  if (req.file) {
+    if (enableCloudinary) {
+      photo = await saveFileToCloudinary(req.file);
+    } else {
+      photo = await saveFileToUploadsDir(req.file, userId);
+    }
+  }
+  const result = await updateContacts(
+    { _id: id, userId },
+    { ...req.body, ...(photo ? { photo } : {}) },
+  );
   if (!result) {
     next(createHttpError(404, 'Contact not found'));
     return;
