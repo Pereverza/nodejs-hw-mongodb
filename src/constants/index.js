@@ -1,4 +1,5 @@
 import { resolve } from "node:path";
+import path from 'node:path';
 
 export const sortList = ['asc', 'desc'];
 
@@ -12,9 +13,9 @@ export const SMTP = {
   SMTP_FROM: 'SMTP_FROM',
 };
 
-export const TEMP_DIR = resolve("temp");
+export const TEMP_DIR = path.join(process.cwd(), 'src', 'temp');
+export const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
 
-export const UPLOADS_DIR = resolve("uploads");
 
 export const CLOUDINARY = {
   CLOUD_NAME: 'CLOUDINARY_CLOUD_NAME',

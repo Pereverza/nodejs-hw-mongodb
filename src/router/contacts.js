@@ -25,10 +25,6 @@ contactRouter.get('/', ctrlWrapper(getContactController));
 
 contactRouter.get('/:id', isValidId, ctrlWrapper(getContactByIdController));
 
-// upload.fields([
-//   { name: 'poster', maxCount: 1 },
-//   { name: 'subposters', maxCount: 10}]);
-// upload.array("poster", 8);
 contactRouter.post(
   '/',
   upload.single('photo'),
@@ -36,17 +32,20 @@ contactRouter.post(
   ctrlWrapper(addContactController),
 );
 
+
 contactRouter.put(
   '/:id',
+  upload.single('photo'),
   isValidId,
   validateBody(updateContactSchema),
   ctrlWrapper(upsertContactByIdController),
 );
 
+
 contactRouter.patch(
   '/:id',
-  isValidId,
   upload.single('photo'),
+  isValidId,
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactByIdController),
 );

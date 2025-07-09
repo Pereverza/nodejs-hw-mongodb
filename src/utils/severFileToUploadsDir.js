@@ -1,10 +1,13 @@
-import { rename } from "node:fs/promises";
-import { UPLOADS_DIR } from "../constants/index.js";
-import { join } from "node:path";
+import path from 'node:path';
+import fs from 'node:fs/promises';
+import { TEMP_DIR, UPLOAD_DIR } from '../constants/index.js';
+import { getEnvVar } from './getEnvVar.js';
 
-export const saveFileToUploadsDir = async file => {
-    const { path: oldPath, filename } = file;
-    const newPath = join(UPLOADS_DIR, filename);
-    rename(oldPath, newPath);
-    return filename;
-}
+export const saveFileToUploadDir = async (file) => {
+  await fs.rename(
+    path.join(TEMP_DIR, file.filename),
+    path.join(UPLOAD_DIR, file.filename),
+  );
+
+  return `${getEnvVar('APP_DOMAIN')}/uploads/${file.filename}`;
+};
