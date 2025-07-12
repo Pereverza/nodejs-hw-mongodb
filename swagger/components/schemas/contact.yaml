@@ -1,0 +1,35 @@
+type: object
+required:
+  - _id
+  - name
+  - email
+  - phoneNumber
+properties:
+  _id:
+    type: string
+    example: "64bd8a6c7499b9d3d43cfaed"
+  name:
+    description: "User name"
+    type: string
+    example: "John Doe"
+  email:
+    description: "User email"
+    type: string
+    example: "john@example.com"
+  phoneNumber:
+    description: "User phone number"
+    type: string
+    example: "+380931234567"
+  contactType:
+      description: "Contact type"
+      type: string
+      enum: ['film', 'serial', 'cartoon']
+  userId:
+    description: "Contacts user id"
+    type: string
+    example: 64bd8a6c7499b9d3d43cfaed
+  photo:
+    description: "Link to user photo"
+    type: string
+    example: https://res.cloudinary.com/dc8n9x033/image/upload/v1752057729/nkkyidz4uk4rmkweydmi.jpg
+
