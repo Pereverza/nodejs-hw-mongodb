@@ -14,7 +14,7 @@
       "url": "http://localhost:3000"
     },
     {
-      "url": "http://example.com/api"
+      "url": "https://nodejs-hw-mongodb-itrv.onrender.com"
     }
   ],
   "tags": [
