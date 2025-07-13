@@ -127,5 +127,8 @@ export const deleteContactByIdController = async (req, res, next) => {
     return;
   }
 
-  res.status(204).send();
+  res.status(200).json({
+    status: 200,
+    message: 'Contact deleted successfully!',
+  });
 };
